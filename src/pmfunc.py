@@ -1,7 +1,8 @@
 import random
 import string
 import base64
-from cryptography.fernet import Fernet
+import secrets
+from cryptography.fernet import fernet
 
 class PwdLocker:
 	def __init__(self):
@@ -33,7 +34,7 @@ class PwdLocker:
 			self.EMT = True
 
 	def create_key(self, path):
-		self.key = base64.b64encode((''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(32))).encode('ascii'))
+		self.key = base64.b64encode((''.join(secrets.choice(string.ascii_uppercase + string.digits) for _ in range(32))).encode('ascii'))
 		with open(path, "wb") as f:
 			f.write(self.key)
 
@@ -71,8 +72,12 @@ class PwdLocker:
 		except ValueError:
 			pass # !! TODO: CHANGE NO DATA ADDED OR LOADED
 
-	def generate_password(self, lenght):
+	def generate_password(self, lenght, special):
 		#generate a password with given lenght
-		chars = string.ascii_letters + string.digits + "!#$%&'()*+, -./:;<=>?@[]^_`{|}~"
-		gen_pwd = "".join(random.choice(chars) for i in range(lenght))
-		print(f"Your generated password is: {gen_pwd}")
+		if special:
+			chars = string.ascii_letters + string.digits + "!#$%&'()*+, -./:;<=>?@[]^_`{|}~"
+			gen_pwd = "".join(random.choice(chars) for i in range(lenght))
+		else:
+			chars = string.ascii_letters + string.digits
+			gen_pwd = "".join(random.choice(chars) for i in range(lenght))
+		return gen_pwd

@@ -1,4 +1,5 @@
-from gui import Gui
+from gui import App
 
 if __name__ == "__main__":
-	app = Gui("PWD-Locker")
+	app = App("PWD-Locker")
+	app.mainloop()
