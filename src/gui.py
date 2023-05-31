@@ -145,18 +145,10 @@ class App(ctk.CTk):
 					self,
 					text="Login",
 					font=("Arial", 30))
-				self.load_key_label = ctk.CTkLabel(
-					self,
-					text="Enter path of key file:",
-					font=("Arial", fsize))
 				self.load_key_entry = ctk.CTkEntry(
 					self,
 					font=("Arial", fsize),
 					placeholder_text="Keyfile")
-				self.load_pwd_label = ctk.CTkLabel(
-					self, 
-					text="Enter path of password file:",
-					font=("Arial", fsize))
 				self.load_pwd_entry = ctk.CTkEntry(
 					self,
 					font=("Arial", fsize),
@@ -228,18 +220,10 @@ class App(ctk.CTk):
 					self,
 					text="Create Login",
 					font=("Arial", 30))
-				self.new_key_label = ctk.CTkLabel(
-					self,
-					text="Enter path for new key-file:",
-					font=("Arial", fsize))
 				self.new_key_entry = ctk.CTkEntry(
 					self,
 					font=("Arial", fsize),
 					placeholder_text="Keyfile")
-				self.new_pwd_label = ctk.CTkLabel(
-					self, 
-					text="Enter path for new pwd-file:",
-					font=("Arial", fsize),)
 				self.new_pwd_entry = ctk.CTkEntry(
 					self,
 					font=("Arial", fsize),
@@ -329,7 +313,7 @@ class App(ctk.CTk):
 			def __init__(self, master):
 				super().__init__(master)
 
-				self.columnconfigure((0, 1, 2), weight=1)
+				self.columnconfigure((0), weight=1)
 				self.rowconfigure((0, 1, 2, 3, 4, 5, 6, 7, 8, 9), weight=1)
 				
 				self.inactive = "#394867" # unselected button color
@@ -374,19 +358,19 @@ class App(ctk.CTk):
 					row=0, column=0, rowspan=8,
 					sticky="nsew")
 				self.pwd_locker_label.grid(
-					row=0 , column=1, 
+					row=0 , column=0, 
 					pady=20, sticky="nsew")
 				self.show_but.grid(
-					row=2, column=1,
+					row=2, column=0,
 					pady=5, sticky="nsew")
 				self.add_but.grid(
-					row=3, column=1,
+					row=3, column=0,
 					pady=5, sticky="nsew")
 				self.gen_but.grid(
-					row=4, column=1,
+					row=4, column=0,
 					pady=5, sticky="nsew")
 				self.quit_but.grid(
-					row=8, column=1,
+					row=8, column=0,
 					pady=5, sticky="nsew")
 
 			def show_but_action(self):
@@ -467,7 +451,7 @@ class App(ctk.CTk):
 						padx=25, pady=25, sticky="nsew")
 					self.table_scroll.grid(row=0, column=5, rowspan=5, 
 						sticky="e")
-					self.table.grid(row=0, column=1, rowspan=4, columnspan=5,
+					self.table.grid(row=0, column=1, rowspan=6, columnspan=5,
 						sticky="nsew")
 
 			class Add(ctk.CTkFrame):
@@ -476,13 +460,60 @@ class App(ctk.CTk):
 					self.widgets()
 					self.layout()
 
+					self.rowconfigure((0, 1, 2, 3, 4, 5), weight=1)
+					self.columnconfigure((0, 1, 2, 3, 4, 5), weight=1)
+
 				def widgets(self):
-					pass 
+					self.add_label = ctk.CTkLabel(
+						self,
+						 text="Add the your account details:",
+						 font=("Arial", 35, "bold"))
+					self.site_entry = ctk.CTkEntry(
+						self,
+						font=("Arial", 20),
+						placeholder_text="Site/ Program")
+					self.user_entry = ctk.CTkEntry(
+						self,
+						font=("Arial", 20),
+						placeholder_text="Username")
+					self.pwd_entry = ctk.CTkEntry(
+						self,
+						font=("Arial", 20),
+						placeholder_text="Password")
+					self.add_but = ctk.CTkButton(
+						self,
+						text="Add",
+						font=("Arial", 20, "bold"),
+						command=self.add_data)
+					# Enter button adds data too
+					self.master.master.master.bind('<Return>', self.enter_func)
 
 				def layout(self):
 					self.grid(
 						row=0, column=0, rowspan=8, columnspan=6,
 						padx=25, pady=25, sticky="nsew")
+					self.add_label.grid(
+						row=0, column=0, columnspan=6, 
+						pady=30, sticky="ew")
+					self.site_entry.grid(
+						row=1, column=1, columnspan=4, sticky="ew")
+					self.user_entry.grid(
+						row=2,column=1, columnspan=4, sticky="ew")
+					self.pwd_entry.grid(
+						row=3, column=1, columnspan=4, sticky="ew")
+					self.add_but.grid(
+						row=4, column=2, columnspan=2)
+
+				def enter_func(self, event):
+					self.add_data()
+
+				def add_data(self):
+					site, user, pwd = self.site_entry.get(), self.user_entry.get(), self.pwd_entry.get()
+					if site and key and user:
+						pm.add_password(site, user, pwd)
+						pm.save()
+					else:
+						self.master.master.master.error_handling("Add all information!")
 
 			class Gen(ctk.CTkFrame):
 				def __init__(self, master):

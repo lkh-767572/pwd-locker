@@ -60,8 +60,8 @@ class PwdLocker:
 		if len(self.data) > 0:
 			self.decrypt()
 
-	def add_password(self, page, user, password):
-		self.decDa += (f"{page};{user};{password}\n").encode()
+	def add_password(self, site, user, password):
+		self.decDa += (f"{site};{user};{password}\n").encode()
 
 	def save(self):
 		try:
