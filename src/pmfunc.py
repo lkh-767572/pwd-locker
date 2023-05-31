@@ -23,11 +23,11 @@ class PwdLocker:
 
 	def show(self):
 		try:
+			data_list= []
 			self.EMT = False
 			for line in (self.decDa.decode()).splitlines():
 				self.page, self.user, self.pwd = line.split(";")
-			data_list= []
-			data_list.append((self.page ,self.user, self.pwd))
+				data_list.append((self.page ,self.user, self.pwd))			
 			return data_list
 		except AttributeError:
 			self.EMT = True
@@ -61,7 +61,9 @@ class PwdLocker:
 			self.decrypt()
 
 	def add_password(self, site, user, password):
+		self.load_password_file(self.pfile)
 		self.decDa += (f"{site};{user};{password}\n").encode()
+		print(self.decDa)
 
 	def save(self):
 		try:

@@ -11,11 +11,11 @@ class App(ctk.CTk):
 
 		super().__init__()
 		self.title(title)
-		self.width = 800
+		self.width = 900
 		self.height = 600
 		self.geometry(f"{self.width}x{self.height}")
-		self.minsize(800, 600)
-		self.maxsize(800, 600)
+		self.minsize(900, 600)
+		self.maxsize(900, 600)
 
 		ctk.set_default_color_theme("dark-blue")
 		ctk.set_appearance_mode("Dark")
@@ -134,7 +134,7 @@ class App(ctk.CTk):
 				super().__init__(master)
 				self.master = master
 				self.rowconfigure((0, 1, 2, 3, 4, 5, 6), weight=1)
-				self.columnconfigure((0, 1, 2, 3, 4, 5, 6), weight=1)
+				self.columnconfigure((0, 1, 2, 3, 4, 5, 6, 7, 8), weight=1)
 				self.widgets()
 				self.layout()
 
@@ -172,18 +172,18 @@ class App(ctk.CTk):
 					row=1, column=0, rowspan=3, columnspan=5,
 					padx=50, pady=50, sticky="nsew")
 				self.label.grid(
-					row=2, column=1, columnspan=4)
+					row=2, column=2, columnspan=4)
 				self.load_key_entry.grid(
-					row=3, column=1, columnspan=4,
+					row=3, column=2, columnspan=5,
 					padx=15, pady=10, sticky="ew")
 				self.load_pwd_entry.grid(
-					row=4, column=1, columnspan=4,
+					row=4, column=2, columnspan=5,
 					padx=10, sticky="ew")
 				self.login_load_but.grid(
-					row=5, column=4,
+					row=5, column=5,
 					pady=20, sticky="ew")
 				self.login_new_but.grid(
-					row=5, column=2, 
+					row=5, column=3, 
 					pady=20, sticky="ew")
 
 			def load_pwd(self):
@@ -209,7 +209,7 @@ class App(ctk.CTk):
 				super().__init__(master)
 				self.master = master
 				self.rowconfigure((0, 1, 2, 3, 4, 5, 6), weight=1)
-				self.columnconfigure((0, 1, 2, 3, 4, 5, 6), weight=1)
+				self.columnconfigure((0, 1, 2, 3, 4, 5, 6, 7, 8), weight=1)
 				self.widgets()
 				self.layout()
 
@@ -246,18 +246,18 @@ class App(ctk.CTk):
 					row=1, column=0, rowspan=3, columnspan=5,
 					padx=50, pady=50, sticky="nsew")
 				self.label.grid(
-					row=2, column=1, columnspan=4)
+					row=2, column=2, columnspan=4)
 				self.new_key_entry.grid(
-					row=3, column=1, columnspan=4,
+					row=3, column=2, columnspan=5,
 					padx=15, pady=10, sticky="ew")
 				self.new_pwd_entry.grid(
-					row=4, column=1, columnspan=4,
+					row=4, column=2, columnspan=5,
 					padx=10, sticky="ew")
 				self.new_load_but.grid(
-					row=5, column=4,
+					row=5, column=5,
 					pady=20, sticky="ew")
 				self.new_new_but.grid(
-					row=5, column=2, 
+					row=5, column=3, 
 					pady=20, sticky="ew")
 
 			def create_pwd(self):
@@ -281,16 +281,17 @@ class App(ctk.CTk):
 			super().__init__(master)
 
 			self.master = master
-			self.columnconfigure(0, weight=2)
-			self.rowconfigure((1, 2, 3, 4, 5, 6, 7), weight=1)
+			self.rowconfigure((0, 1, 2, 3, 4, 5, 6, 7), weight=1)
 			self.columnconfigure((0, 1, 2, 3, 4, 5, 6), weight=1)
 
+			
 			self.widgets()
 			self.layout()
 
 		def widgets(self):
 			self.sidebar = self.Sidebar(master=self)
 			self.info_window = self.InfoWindow(master=self)
+			self.frame_by_name(name="show") # init show frame
 
 		def layout(self):
 			self.grid(
@@ -325,8 +326,8 @@ class App(ctk.CTk):
 			def widgets(self):
 				self.pwd_locker_label = ctk.CTkLabel(
 					self,
-					text="PWD-Locker",
-					font=("Bondoni", 25, "bold"))
+					text="PWD-Locker \n ------------------",
+					font=("Bondoni", 15, "bold"))
 				self.show_but = ctk.CTkButton(
 					self,
 					corner_radius=0, height=40, border_spacing=10, 
@@ -355,11 +356,11 @@ class App(ctk.CTk):
 
 			def layout(self):
 				self.grid(
-					row=0, column=0, rowspan=8,
+					row=0, column=0, rowspan=8, columnspan=1,
 					sticky="nsew")
 				self.pwd_locker_label.grid(
 					row=0 , column=0, 
-					pady=20, sticky="nsew")
+					pady=20, sticky="ew")
 				self.show_but.grid(
 					row=2, column=0,
 					pady=5, sticky="nsew")
@@ -375,6 +376,7 @@ class App(ctk.CTk):
 
 			def show_but_action(self):
 				self.master.frame_by_name(name="show")
+				self.master.show_frame.fill_table()
 
 			def add_but_action(self):
 				self.master.frame_by_name(name="add")
@@ -391,16 +393,13 @@ class App(ctk.CTk):
 				self.rowconfigure((0, 1, 2, 3, 4, 5, 6, 7), weight=1)
 				self.columnconfigure((0, 1, 2, 3, 4, 5), weight=1)
 
-				self.widgets()
 				self.layout()
-
-			def widgets(self):
-				pass
 
 			def layout(self):
 				self.grid(
-					row=0, column=1, rowspan=8, columnspan=6,
+					row=0, column=2, rowspan=8, columnspan=5,
 					padx=25, pady=25, sticky="nsew")
+
 
 			class Show(ctk.CTkFrame):
 				def __init__(self, master):
@@ -412,13 +411,10 @@ class App(ctk.CTk):
 
 					self.widgets()
 					self.layout()
+					self.fill_table()
 
 				def widgets(self):
-					data_list = pm.show()
-		
 					self.table = ttk.Treeview(self)
-					self.table_scroll = ctk.CTkScrollbar(self, command=self.table.yview,
-						bg_color="black")
 					self.table["columns"] = ("site", "user", "pwd")
 					self.table["show"] = "headings"
 					self.table.heading(
@@ -434,13 +430,6 @@ class App(ctk.CTk):
 						text="Password", 
 						anchor=tk.CENTER)
 
-					# fill table
-					if data_list:
-						index = 0
-						for i in data_list:
-							self.table.insert("", "end", index, values=i)
-							index += 1
-
 				def layout(self):
 					style = ttk.Style(self.master.master.master)
 					style.theme_use("clam")
@@ -449,10 +438,16 @@ class App(ctk.CTk):
 					self.grid(
 						row=0, column=0, rowspan=8, columnspan=6,
 						padx=25, pady=25, sticky="nsew")
-					self.table_scroll.grid(row=0, column=5, rowspan=5, 
-						sticky="e")
-					self.table.grid(row=0, column=1, rowspan=6, columnspan=5,
+					self.table.grid(row=0, column=0, rowspan=6, columnspan=5,
 						sticky="nsew")
+
+				def fill_table(self):
+					data_list = pm.show()
+					if data_list:
+						index = 0
+						for i in data_list:
+							self.table.insert("", "end", index, values=i)
+							index += 1
 
 			class Add(ctk.CTkFrame):
 				def __init__(self, master):
@@ -509,7 +504,7 @@ class App(ctk.CTk):
 
 				def add_data(self):
 					site, user, pwd = self.site_entry.get(), self.user_entry.get(), self.pwd_entry.get()
-					if site and key and user:
+					if site and user and pwd:
 						pm.add_password(site, user, pwd)
 						pm.save()
 					else:
@@ -642,5 +637,6 @@ class App(ctk.CTk):
 					self.generate()
 
 				# TODO:
-				# Add
-				# Extejd show
+				# Remove duplicates?
+				# remove passwords
+				# edit passwords
