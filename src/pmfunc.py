@@ -1,8 +1,7 @@
-import random
 import string
 import base64
 import secrets
-from cryptography.fernet import fernet
+from cryptography.fernet import Fernet
 
 class PwdLocker:
 	def __init__(self):
@@ -72,12 +71,24 @@ class PwdLocker:
 		except ValueError:
 			pass # !! TODO: CHANGE NO DATA ADDED OR LOADED
 
-	def generate_password(self, lenght, special):
-		#generate a password with given lenght
-		if special:
-			chars = string.ascii_letters + string.digits + "!#$%&'()*+, -./:;<=>?@[]^_`{|}~"
-			gen_pwd = "".join(random.choice(chars) for i in range(lenght))
-		else:
-			chars = string.ascii_letters + string.digits
-			gen_pwd = "".join(random.choice(chars) for i in range(lenght))
-		return gen_pwd
+	def generate_password(self, length, special, digits, uppercase):
+	    # Generate a password with given length
+	    s_chars = "!#$%&'()*+, -./:;<=>?@[]^_`{|}~"
+	    if special and digits and uppercase:
+	        chars = string.ascii_letters + string.digits + s_chars
+	    elif not special and digits and uppercase:
+	        chars = string.ascii_letters + string.digits
+	    elif special and not digits and uppercase:
+	        chars = string.ascii_letters + s_chars
+	    elif special and digits and not uppercase:
+	        chars = string.ascii_lowercase + s_chars
+	    elif not special and not digits and uppercase:
+	        chars = string.ascii_letters
+	    elif special and not digits and not uppercase:
+	        chars = string.ascii_lowercase + s_chars
+	    elif not special and digits and not uppercase:
+	        chars = string.ascii_lowercase + string.digits
+	    elif not special and not digits and not uppercase:
+	        chars = string.ascii_lowercase
+	    gen_pwd = "".join(secrets.choice(chars) for i in range(length))
+	    return gen_pwd

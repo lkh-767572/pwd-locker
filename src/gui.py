@@ -52,6 +52,7 @@ class App(ctk.CTk):
 		def __init__(self, master, err_text):
 			super().__init__(master)
 			self.err_text = err_text
+			self.bind("<Return>", self.enter_func)
 			self.geometry("200x75")
 			self.rowconfigure(0, weight=1)
 			self.columnconfigure((0, 1, 2), weight=1)
@@ -85,6 +86,9 @@ class App(ctk.CTk):
 		def reset(self):
 			self.master.ERROR_OVER = True
 			self.destroy()
+
+		def enter_func(self, event):
+			self.reset()
 
 	class Menu(ctk.CTkFrame):
 		def __init__(self, master):
@@ -122,6 +126,8 @@ class App(ctk.CTk):
 
 			self.framelist[old].forget()
 			self.framelist[new].tkraise()
+			self.master.bind('<Return>', self.framelist[new].enter_func)
+			self.framelist[new].focus_set()
 
 		class Login(ctk.CTkFrame):
 			def __init__(self, master):
@@ -194,7 +200,7 @@ class App(ctk.CTk):
 				if key and pwd:
 					pm.load_key(key)
 					pm.load_password_file(pwd)
-					if not self.master.master.pm.FNF:
+					if not pm.FNF:
 						self.master.master.change_window(1)
 					else:
 						if self.master.master.ERROR_OVER:
@@ -202,6 +208,9 @@ class App(ctk.CTk):
 				else:
 					if self.master.master.ERROR_OVER:
 						self.master.master.error_handling("Enter more information")
+
+			def enter_func(self, event):
+				self.load_pwd()
 
 		class New(ctk.CTkFrame):
 			def __init__(self, master):
@@ -267,7 +276,7 @@ class App(ctk.CTk):
 					row=5, column=2, 
 					pady=20, sticky="ew")
 
-			def create_pwd(self, key, pwd):
+			def create_pwd(self):
 				key = self.new_key_entry.get()
 				pwd = self.new_pwd_entry.get()
 				if key and pwd:
@@ -278,6 +287,9 @@ class App(ctk.CTk):
 					self.master.master.change_window(1)
 				else:
 					self.master.master.error_handling("Enter all information!")
+
+			def enter_func(self, event):
+				self.create_pwd()
 
 
 	class Interface(ctk.CTkFrame):
@@ -411,6 +423,9 @@ class App(ctk.CTk):
 					super().__init__(master)
 					self.master = master
 
+					self.rowconfigure((0, 1, 2, 3, 4, 5), weight=1)
+					self.columnconfigure((0, 1, 2, 3, 4, 5), weight=1)
+
 					self.widgets()
 					self.layout()
 
@@ -418,8 +433,8 @@ class App(ctk.CTk):
 					data_list = pm.show()
 		
 					self.table = ttk.Treeview(self)
-					self.table_scroll = ctk.CTkScrollbar(self, command=self.table.yview)
-
+					self.table_scroll = ctk.CTkScrollbar(self, command=self.table.yview,
+						bg_color="black")
 					self.table["columns"] = ("site", "user", "pwd")
 					self.table["show"] = "headings"
 					self.table.heading(
@@ -443,12 +458,16 @@ class App(ctk.CTk):
 							index += 1
 
 				def layout(self):
+					style = ttk.Style(self.master.master.master)
+					style.theme_use("clam")
+					style.configure("Treeview", background="black", 
+					                fieldbackground="black", foreground="white")
 					self.grid(
 						row=0, column=0, rowspan=8, columnspan=6,
 						padx=25, pady=25, sticky="nsew")
-					self.table_scroll.grid(row=0, column=8, rowspan=8, 
+					self.table_scroll.grid(row=0, column=5, rowspan=5, 
 						sticky="e")
-					self.table.grid(row=0, column=1, rowspan=8, columnspan=6,
+					self.table.grid(row=0, column=1, rowspan=4, columnspan=5,
 						sticky="nsew")
 
 			class Add(ctk.CTkFrame):
@@ -475,54 +494,122 @@ class App(ctk.CTk):
 					self.columnconfigure((0, 1, 2, 3, 4, 5), weight=1)
 
 				def widgets(self):
-					self.slidervalue = 32
 					self.gen_label = ctk.CTkLabel(
 						self,
-						text="Customize password options:", 
-						font=("Arial", 25))
+						text="Password Generator", 
+						font=("Arial", 35, "bold"))
 					self.output = ctk.CTkEntry(self)
 					self.special = ctk.CTkCheckBox(
 						self,
-						text="Special Characters",
-						font=("Arial", 25))
+						text="!@#$%^&*",
+						font=("Arial", 20))
+					self.upper = ctk.CTkCheckBox(
+						self,
+						text="A-Z",
+						font=("Arial", 20))
+					self.digits = ctk.CTkCheckBox(
+						self,
+						text="0-9",
+						font=("Arial", 20))
+					self.options = ctk.CTkLabel(
+						self,
+						text="Options:", font=("Arial", 20))
 					self.slider = ctk.CTkSlider(
 						self,
 						from_=0, to=64, number_of_steps=64)
-					self.slidertext = ctk.CTkLabel(
+					self.lenghttext = ctk.CTkLabel(
 						self,
-						font=("Arial", 20))
+						text="Length:", font=("Arial", 20))
+					self.lenghttext.configure(text="Length: (32)")
 					self.generate_button = ctk.CTkButton(
 						self,
 						text="Generate",
 						font=("Arial", 25),
 						command=self.generate)
-					self.slider.bind("<ButtonRelease-1>", command=lambda a: [self.slidertext.configure(text=int(self.slider.get()))])
+					self.copy_but = ctk.CTkButton(
+						self,
+						text="Copy to Clipboard",
+						font=("Arial", 25),
+						command=self.copy)
+					# keybindings
+					self.slider.bind("<ButtonRelease-1>", command=self.slider_move)
+					# move slider with arrow-keys
+					self.master.master.master.bind("<Left>", self.slider_minus)
+					self.master.master.master.bind("<Right>", self.slider_plus)
+					# generate new password when options changed
+					self.special.bind("<Button-1>", self.option_changed)
+					self.upper.bind("<Button-1>", self.option_changed)
+					self.digits.bind("<Button-1>", self.option_changed)
 
 				def layout(self):
 					self.grid(
 						row=0, column=0, rowspan=8, columnspan=6,
 						padx=25, pady=25, sticky="nsew")
 					self.gen_label.grid(
-						row=0, column=1, columnspan=3, sticky="ew")
+						row=0, column=0, columnspan=6, sticky="ew")
 					self.output.grid(
-						row=1, column=1, columnspan=3, sticky="ew")
-					self.special.grid(
-						row=2, column=1, columnspan=1)
+						row=1, column=0, columnspan=6, sticky="ew", padx=50)
+					self.lenghttext.grid(
+						row=2, column=0, columnspan=2, 
+						padx=10, sticky="ew")
 					self.slider.grid(
-						row=3, column=2, columnspan=2, sticky="ew")
-					self.slidertext.grid(
-						row=3, column=1, sticky="e")
+						row=2, column=2, columnspan=4, 
+						padx=10, sticky="ew")
+					self.options.grid(
+						row=3, column=0, columnspan=2, padx=10,
+						sticky="ew")
+					self.special.grid(
+						row=3, column=3, sticky="nsew", padx=10)
+					self.upper.grid(
+						row=3, column=4, sticky="nsew", padx=10)
+					self.digits.grid(
+						row=3, column=5, sticky="nsew", padx=10)
 					self.generate_button.grid(
-						row=4, column=1)
+						row=4, column=3, padx=10)
+					self.copy_but.grid(
+						row=4, column=4, padx=10, columnspan=2)
+				
+				def slider_move(self, event):
+					i = int(self.slider.get())
+					s = "Lenght: " + "(" + str(i) + ")"
+					self.lenghttext.configure(text=s)
+					self.generate()
+
+				def option_changed(self, event):
+					self.generate()
 
 				def generate(self):
-					pwd = pm.generate_password(lenght=int(self.slider.get()), special=self.special.get())
-					self.output.configure(textvariable=pwd)
-					# as writing in textfield is not doable just copy to clipboard
+					pwd = pm.generate_password(length=int(self.slider.get()), special=self.special.get(),
+						digits=self.digits.get(), uppercase=self.upper.get())
+					self.output.delete(0, 64) 		# clear entry field
+					self.output.insert(0, pwd)		# insert password
+
+				def copy(self):
+					pwd = self.output.get()
+					self.master.master.master.clipboard_clear()
+					self.master.master.master.clipboard_append(pwd)
+					self.master.master.master.update()
+
+				def slider_minus(self, event):
+					current_val = int(self.slider.get())
+					next_val = current_val - 1
+					if next_val < 0:
+						next_val = 0
+					self.slider.set(next_val)
+					s = "Lenght: " + "(" + str(next_val) + ")"
+					self.lenghttext.configure(text=s)
+					self.generate()
+
+				def slider_plus(self, event):
+					current_val = int(self.slider.get())
+					next_val = current_val + 1
+					if next_val > 64:
+						next_val = 64
+					self.slider.set(next_val)
+					s = "Lenght: " + "(" + str(next_val) + ")"
+					self.lenghttext.configure(text=s)
+					self.generate()
 
 				# TODO:
-				# Enter as faster way to navigate
 				# Add
-				# Make table dark
 				# Extejd show
-				# modify pmfunc with secrets module
