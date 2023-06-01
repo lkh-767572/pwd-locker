@@ -187,12 +187,12 @@ class App(ctk.CTk):
 					pady=20, sticky="ew")
 
 			def load_pwd(self):
-				key = self.load_key_entry.get()
-				pwd = self.load_pwd_entry.get()
-				if key and pwd:
-					pm.load_key(key)
-					pm.load_password_file(pwd)
-					if not pm.FNF:
+				self.key = self.load_key_entry.get()
+				self.pwd = self.load_pwd_entry.get()
+				if self.key and self.pwd:
+					pm.load_key(self.key)
+					pm.load_password_file(self.pwd)
+					if not pm.FileNotFoundError:
 						self.master.master.change_window(1)
 					else:
 						if self.master.master.ERROR_OVER:
@@ -261,13 +261,13 @@ class App(ctk.CTk):
 					pady=20, sticky="ew")
 
 			def create_pwd(self):
-				key = self.new_key_entry.get()
-				pwd = self.new_pwd_entry.get()
-				if key and pwd:
-					pm.create_key(key)
-					pm.generate_password_file(pwd)
-					pm.load_key(key)
-					pm.load_password_file(pwd)
+				self.key = self.new_key_entry.get()
+				self.pwd = self.new_pwd_entry.get()
+				if self.key and self.pwd:
+					pm.create_key(self.key)
+					pm.generate_password_file(self.pwd)
+					pm.load_key(self.key)
+					pm.load_password_file(self.pwd)
 					self.master.master.change_window(1)
 				else:
 					self.master.master.error_handling("Enter all information!")
@@ -434,7 +434,7 @@ class App(ctk.CTk):
 					style = ttk.Style(self.master.master.master)
 					style.theme_use("clam")
 					style.configure("Treeview", background="black", 
-					                fieldbackground="black", foreground="white")
+									fieldbackground="black", foreground="white")
 					self.grid(
 						row=0, column=0, rowspan=8, columnspan=6,
 						padx=25, pady=25, sticky="nsew")
@@ -442,11 +442,16 @@ class App(ctk.CTk):
 						sticky="nsew")
 
 				def fill_table(self):
+					pm.load_password_file(pm.pfile)
+					if self.table.exists('0'): # check if data in treeview
+						for index in self.table.get_children():
+							self.table.delete(str(index))
+
 					data_list = pm.show()
 					if data_list:
 						index = 0
-						for i in data_list:
-							self.table.insert("", "end", index, values=i)
+						for data in data_list:
+							self.table.insert("", "end", index, values=data)
 							index += 1
 
 			class Add(ctk.CTkFrame):
@@ -506,7 +511,10 @@ class App(ctk.CTk):
 					site, user, pwd = self.site_entry.get(), self.user_entry.get(), self.pwd_entry.get()
 					if site and user and pwd:
 						pm.add_password(site, user, pwd)
-						pm.save()
+						pm.save(pm.key, pm.decData)
+						if pm.ValueError:
+							if self.master.master.master.ERROR_OVER:
+								self.master.master.master.error_handling("Value Error; Nothing saved!")
 					else:
 						self.master.master.master.error_handling("Add all information!")
 
