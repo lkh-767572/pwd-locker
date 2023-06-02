@@ -55,15 +55,10 @@ After you  once hit the add button, if no popup appears your data is securely ad
   
 ## Also please dont forget to backup your files!
 
-#
 ## Contributing
 
 Explain how others can contribute to your project. You can include guidelines for reporting bugs, submitting feature requests, or contributing code.
 
 ## License
+The Password Manager is released under the [MIT License](LICENSE). You are free to modify, distribute, and use the script for personal or commercial purposes, subject to the terms and conditions of the license.
 
-Specify the license under which your project is distributed. For example, you can use an open-source license like MIT, Apache, or GNU GPL. Include the license text in a separate file if necessary.
-
-## Contact
-
-Provide your contact information so that users can reach out to you if they have any questions, feedback, or issues related to your project. You can include your email address, social media handles, or links to relevant communication channels.
