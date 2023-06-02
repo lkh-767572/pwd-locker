@@ -40,14 +40,14 @@ Include instructions on how to install and set up your project. You can provide 
 # Usage
 
 ## WARNING! Some features like a popup as you are going to delete passwords still have to be added!
-Via the <Delete> Key you will delete the current selected password!
+Via the Delete-Key you will delete the current selected password!
 
 ## 1. Create an key and password file
 The name you enter will be the path of the generated files. After generating your password and key file are automatically loaded.
 
 ## 2. Add your password data via the add button in the sidebar
 After you  once hit the add button, if no popup appears your data is securely added, and encrypted to your password file. You can add as much passwords to the file as you want. You can before go to the generating tab and save an secure random password to your Clipboard.
-
+![Gen](pictures/gen.png)
 ![Add](pictures/add.png)
   
 ## 3. You can close the program, all information is securely written to your password file and encrypted with the key.
