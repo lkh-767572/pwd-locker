@@ -25,6 +25,14 @@ The Password Manager includes error handling mechanisms to provide informative e
 
 ![Table](pictures/show.png)
 
+# Roadmap
+- Adding an section to securly store notes
+- Browse button for login file path opening
+- Warning if you reuse passwords
+- Import passwords from different other password managing systems
+- Search for Passwords
+- and much more
+
 # Installation
 
 Include instructions on how to install and set up your project. You can provide step-by-step instructions or commands to be executed.
