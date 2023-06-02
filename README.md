@@ -5,22 +5,22 @@ pwd-locker is an small, unfinished free time gui manager project, to store and e
 ![Login](pictures/login.png)
 
 # Features
-## 1. Encryption and Decryption
+### 1. Encryption and Decryption
 The Password Manager uses the AES-256 encryption algorithm to securely encrypt and decrypt passwords and other sensitive data. It employs a key derivation function (Scrypt) to derive a strong encryption key. This ensures that even if the encrypted data is compromised, it cannot be easily decrypted without the correct key.
 
-## 2. Secure Storage
+### 2. Secure Storage
 Passwords and other data are stored in a file that is encrypted using AES-256. The encrypted file can only be accessed and decrypted with the correct key, providing an additional layer of security to protect against unauthorized access.
 
-## 3. Password Generation
+### 3. Password Generation
 The Password Manager offers a password generation feature, allowing users to easily create strong and random passwords. Users can specify the length of the password as well as include or exclude special characters, digits, and uppercase letters to meet specific requirements.
 
-## 4. User-Friendly Interface
+### 4. User-Friendly Interface
 The Password Manager provides a simple and intuitive command-line interface that allows users to add, view, and manage their passwords. Users can easily add new passwords, view existing passwords, and delete or modify passwords as needed.
 
-## 5. Key Management
+### 5. Key Management
 The Password Manager supports key management functionalities, allowing users to create and load encryption keys. Encryption keys are securely generated and can be saved to a file for future use. This ensures that the encrypted data can only be accessed by users with the correct key.
 
-## 6. Error Handling
+### 6. Error Handling
 The Password Manager includes error handling mechanisms to provide informative error messages and handle common issues such as file not found errors or incorrect input values. This improves the overall usability and reliability of the script.
 
 ![Table](pictures/show.png)
@@ -35,7 +35,34 @@ The Password Manager includes error handling mechanisms to provide informative e
 
 # Installation
 
-Include instructions on how to install and set up your project. You can provide step-by-step instructions or commands to be executed.
+### 1. Fork the Repository
+Fork the repository by clicking the "Fork" button on the top right corner of this page. This will create a copy of the project in your GitHub account.
+
+### 2. Clone the Repository
+Clone the forked repository to your local machine. Open a terminal and run the following command:
+
+```bash
+git clone https://github.com/your-username/your-forked-repo.git
+```
+
+### 3. Navigate to the Project Directory
+Change to the project directory using the cd command:
+
+```bash
+Copy code
+cd your-forked-repo
+```
+4. Install Dependencies
+The Password Manager relies on the cryptography, tkinter and some other libraries. You can install the dependencies by using a package manager like pip or pipenv.
+```bash
+pip install tkinter
+pip install customtkinter
+pip install cryptography
+pip install base64
+pip install hashlib
+pip install json
+pip install secrets
+```
 
 # Usage
 
